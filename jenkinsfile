@@ -1,0 +1,27 @@
+pipeline {
+  agent any
+ stages {
+  stage('SCM') {
+    steps {
+    checkout scmGit(branches: [[name: '*/UAT']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Rajnikanthyadav336/java-example.git']])
+  }
+  }
+  stage('SonarQube Analysis') {
+     tools {
+    maven 'Default Maven'
+  }
+    steps {
+    withSonarQubeEnv(installationName: 'sonar') {
+      sh "mvn clean test sonar:sonar -Dsonar.projectKey=sonar1"
+    }
+  }
+ }
+  stage('Quality Gate') {
+            steps {
+              timeout(time: 1, unit: 'HOURS') {
+                waitForQualityGate abortPipeline: true
+              }
+            }
+          }        
+}
+}
