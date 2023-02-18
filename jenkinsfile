@@ -1,7 +1,7 @@
 pipeline {
   agent any
  stages {
-  stage('SCM') {
+  stage('SM') {
     steps {
     checkout scmGit(branches: [[name: '*/UAT']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Rajnikanthyadav336/java-example.git']])
   }
